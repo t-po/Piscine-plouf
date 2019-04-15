@@ -4,19 +4,16 @@
 
 #include "arete.h"
 
-arete::arete(sommet mSomArrive, sommet mSomDepart) : m_somArrive(mSomArrive), m_somDepart(mSomDepart) {
+arete::arete(std::string id, sommet* mSomArrive, sommet* mSomDepart) : m_somArrive(mSomArrive), m_somDepart(mSomDepart), m_id(id) {
 }
 
 arete::~arete() {
 
 }
 
-void arete::ajouterDepart(sommet Depart) {
-    m_somDepart=Depart;
+void arete::ajouterPonderation(float ponde) {
+    m_ponderation.push_back(ponde);
 }
 
-void arete::ajouterArrivee(sommet Arrivee) {
-    m_somArrive=Arrivee;
-}
 
 

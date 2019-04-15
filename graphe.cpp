@@ -33,12 +33,33 @@ graphe::graphe(std::string nomFichierGraphe, std::string nomFichierArete) {
     //lecture des aretes
     for (int i=0; i<m_taille; ++i){
         //lecture des ids des deux extrémitées
-        ifs>>id; if(ifs.fail()) throw std::runtime_error("Probleme lecture arete sommet 1");
-        ifs>>id_somDepart; if(ifs.fail()) throw std::runtime_error("Probleme lecture arete sommet 2");
-        //ajouter chaque extrémité à la liste des voisins de l'autre (graphe non orienté)
-        ///(m_aretes.find(id))->second->m_somDepart;
-        (m_sommets.find(id_somDepart))->second->ajouterVoisin((m_sommets.find(id))->second);//remove si graphe orienté
+        ifs>>id; if(ifs.fail()) throw std::runtime_error("Probleme lecture id arete");
+        ifs>>id_somDepart; if(ifs.fail()) throw std::runtime_error("Probleme lecture arete sommet Depart");
+        ifs>>id_somArrive; if(ifs.fail()) throw std::runtime_error("Probleme lecture arete sommet Arrivee");
+
+        m_aretes.insert({id,new arete{id,(m_sommets.find(id_somDepart))->second,(m_sommets.find(id_somArrive))->second}});
     }
+    ifs.close();
+    std::ifstream ifs2{nomFichierGraphe};
+    if (!ifs)
+        throw std::runtime_error( "Impossible d'ouvrir en lecture " + nomFichierGraphe );
+    ifs >> m_ordre;
+    if ( ifs.fail() )
+        throw std::runtime_error("Problème lecture ordre du graphe");
+    ifs2 >> m_taille;
+    if ( ifs.fail() )
+        throw std::runtime_error("Problème lecture taille du graphe");
+    int nb_ponde;
+    float ponde;
+    ifs2>>nb_ponde;
+    for (int i=0; i<m_taille; ++i){
+        ifs2>>id; if(ifs.fail()) throw std::runtime_error("Probleme lecture id arete");
+        for (int j=0;i<nb_ponde;j++){
+            ifs2>>ponde; if(ifs.fail()) throw std::runtime_error("Probleme lecture poids de l'arete");
+            (m_aretes.find(id))->second->ajouterPonderation(ponde);
+        }
+    }
+
 }
 
 void graphe::afficher() const{                              ///Affiche le graphe
