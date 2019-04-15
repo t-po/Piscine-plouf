@@ -16,7 +16,7 @@ graphe::graphe(std::string nomFichierGraphe, std::string nomFichierArete) {
     ifs >> m_ordre;
     if ( ifs.fail() )
         throw std::runtime_error("Problème lecture ordre du graphe");
-    std::string id;
+    int id;
     double x,y;
     //lecture des sommets
     for (int i=0; i<m_ordre; ++i){
@@ -33,12 +33,30 @@ graphe::graphe(std::string nomFichierGraphe, std::string nomFichierArete) {
     //lecture des aretes
     for (int i=0; i<m_taille; ++i){
         //lecture des ids des deux extrémitées
-        ifs>>id; if(ifs.fail()) throw std::runtime_error("Probleme lecture arete sommet 1");
-        ifs>>id_voisin; if(ifs.fail()) throw std::runtime_error("Probleme lecture arete sommet 2");
-        //ajouter chaque extrémité à la liste des voisins de l'autre (graphe non orienté)
-        (m_sommets.find(id))->second->ajouterVoisin((m_sommets.find(id_voisin))->second);
-        (m_sommets.find(id_voisin))->second->ajouterVoisin((m_sommets.find(id))->second);//remove si graphe orienté
+        ifs>>id; if(ifs.fail()) throw std::runtime_error("Probleme lecture id arete");
+        ifs>>id_somDepart; if(ifs.fail()) throw std::runtime_error("Probleme lecture arete sommet Depart");
+        ifs>>id_somArrive; if(ifs.fail()) throw std::runtime_error("Probleme lecture arete sommet Arrivee");
+
+        m_aretes.insert({id,new arete{id,id_somDepart,id_somArrive}});
     }
+    ifs.close();
+    std::ifstream ifs2{nomFichierArete};
+    if (!ifs2)
+        throw std::runtime_error( "Impossible d'ouvrir en lecture " + nomFichierGraphe );
+    ifs2 >> m_taille;
+    if ( ifs2.fail() )
+        throw std::runtime_error("Problème lecture taille du graphe");
+    int nb_ponde;
+    float ponde;
+    ifs2>>nb_ponde;
+    for (int i=0; i<m_taille; ++i){
+        ifs2>>id; if(ifs2.fail()) throw std::runtime_error("Probleme lecture id arete");
+        for (int j=0;j<nb_ponde;j++){
+            ifs2>>ponde; if(ifs2.fail()) throw std::runtime_error("Probleme lecture poids de l'arete");
+            (m_aretes.find(id))->second->ajouterPonderation(ponde);
+        }
+    }
+
 }
 
 void graphe::afficher() const{                              ///Affiche le graphe
@@ -48,8 +66,13 @@ void graphe::afficher() const{                              ///Affiche le graphe
     {
         std::cout<<" Sommet : ";
         it.second->afficherData();
-        it.second->afficherVoisins();
-        std::cout<<"  Degre:"<< it.second->getDegre()<<std::endl;
+    }
+    std::cout<<std::endl;
+    std::cout<<"Il y a "<<m_taille<<" aretes"<<std::endl;
+    for (auto ar:m_aretes)
+    {
+        std::cout<<" Aretes : ";
+        ar.second->afficherAretes();
     }
 }
 
