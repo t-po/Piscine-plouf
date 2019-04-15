@@ -77,8 +77,9 @@ void graphe::afficher() const{                              ///Affiche le graphe
 }
 
 
-void graphe::triAretesCroissant() const
+void graphe::areteTri() const;
 {
+    for ( auto it = m_aretes.begin(); it != m_arete.end(); ++it )
 
 }
 

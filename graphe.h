@@ -22,6 +22,7 @@ class graphe {
 
         ///Affiche le graphe
         void afficher() const;
+        void areteTri() const;
 
     private:
         int m_ordre=0;
