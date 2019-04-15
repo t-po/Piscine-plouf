@@ -4,7 +4,7 @@
 
 #include "arete.h"
 
-arete::arete(std::string id, sommet* mSomArrive, sommet* mSomDepart) : m_somArrive(mSomArrive), m_somDepart(mSomDepart), m_id(id) {
+arete::arete(std::string id, std::string mSomArrive, std::string mSomDepart) : m_somArrive(mSomArrive), m_somDepart(mSomDepart), m_id(id) {
 }
 
 arete::~arete() {

@@ -37,7 +37,7 @@ graphe::graphe(std::string nomFichierGraphe, std::string nomFichierArete) {
         ifs>>id_somDepart; if(ifs.fail()) throw std::runtime_error("Probleme lecture arete sommet Depart");
         ifs>>id_somArrive; if(ifs.fail()) throw std::runtime_error("Probleme lecture arete sommet Arrivee");
 
-        m_aretes.insert({id,new arete{id,(m_sommets.find(id_somDepart))->second,(m_sommets.find(id_somArrive))->second}});
+        m_aretes.insert({id,new arete{id,id_somDepart,id_somArrive}});
     }
     ifs.close();
     std::ifstream ifs2{nomFichierGraphe};

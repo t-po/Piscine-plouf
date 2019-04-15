@@ -12,14 +12,14 @@ class vector;
 
 class arete {
     public:
-        arete(std::string,sommet* mSomArrive, sommet* mSomDepart);
+        arete(std::string, std::string mSomArrive, std::string mSomDepart);
         ~arete();
         void ajouterPonderation(float);
 
     private:
         std::string m_id;
-        sommet m_somDepart;
-        sommet m_somArrive;
+        std::string m_somDepart;
+        std::string m_somArrive;
         std::vector<float> m_ponderation;
 
 };
