@@ -14,7 +14,7 @@
 class sommet {
     public:
         ///constructeur qui reçoit en params les données du sommet
-        sommet(std::string,double,double);
+        sommet(int,double,double);
         ~sommet();
         void ajouterVoisin(const sommet*);
         void afficherData() const;
@@ -26,7 +26,7 @@ class sommet {
         std::vector<const sommet*> m_voisins;
 
         /// Données spécifiques du sommet
-        std::string m_id; // Identifiant
+        int m_id; // Identifiant
         double m_x, m_y; // Position
 };
 
