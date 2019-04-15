@@ -3,7 +3,7 @@
 
 int main() {
     std::string id;
-    graphe g{"../files/broadway.txt"};
+    graphe g{"../files/broadway.txt","../file/broadway_weights_0.txt"};
     g.afficher();                                                           ///Affiche le graphe
     std::cout<<"Veuillez choisir l'identifiant d'un sommet "<<std::endl;
     std::cin >> id;                                                   ///Applique le DFS et l'affiche
