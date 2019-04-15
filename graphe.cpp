@@ -77,5 +77,10 @@ void graphe::afficher() const{                              ///Affiche le graphe
 }
 
 
+void graphe::triAretesCroissant() const
+{
+
+}
+
 graphe::~graphe()
 =default;
