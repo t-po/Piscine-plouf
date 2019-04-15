@@ -76,9 +76,26 @@ void graphe::afficher() const{                              ///Affiche le graphe
     }
 }
 
-void graphe::triAretesCroissant() const
+void graphe::kruskal() ///Prim
 {
+    std::unordered_map<int,arete*> arbre;
+    int indice1=0;
+    int *marques;
+    int s,x,y,ymin;
+    float min;
 
+    s=rand()%m_ordre;
+    marques[s]= 1;
+
+    while (indice1<m_ordre-1)
+    {
+        min=INFINITY;
+        for (x=0;x<m_ordre;x++)
+            if(marques[x])
+                for (y=0;y<m_ordre;y++)
+                    std::cout <<" ";
+    }
+    std::cout <<m_taille << std::endl;
 }
 
 graphe::~graphe()

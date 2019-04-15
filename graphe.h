@@ -23,7 +23,8 @@ class graphe {
         ///Affiche le graphe
         void afficher() const;
 
-       void triKruskal();
+        /// Kruskal
+        void kruskal();
 
 
     private:
