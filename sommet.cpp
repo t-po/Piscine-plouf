@@ -13,7 +13,7 @@
 #include <set>
 #include <list>
 
-sommet::sommet(std::string id,double x,double y):m_id{std::move(id)},m_x{x},m_y{y}
+sommet::sommet(int id,double x,double y):m_id{std::move(id)},m_x{x},m_y{y}
 {
 }
 void sommet::ajouterVoisin(const sommet* voisin){
