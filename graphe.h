@@ -23,6 +23,9 @@ class graphe {
         ///Affiche le graphe
         void afficher() const;
 
+       void triKruskal();
+
+
     private:
         int m_ordre=0;
         int m_taille;
