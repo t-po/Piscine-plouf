@@ -36,7 +36,7 @@ graphe::graphe(std::string nomFichierGraphe, std::string nomFichierArete) {
         ifs>>id; if(ifs.fail()) throw std::runtime_error("Probleme lecture arete sommet 1");
         ifs>>id_somDepart; if(ifs.fail()) throw std::runtime_error("Probleme lecture arete sommet 2");
         //ajouter chaque extrémité à la liste des voisins de l'autre (graphe non orienté)
-        (m_aretes.find(id))->second->m_somDepart;
+        ///(m_aretes.find(id))->second->m_somDepart;
         (m_sommets.find(id_somDepart))->second->ajouterVoisin((m_sommets.find(id))->second);//remove si graphe orienté
     }
 }
