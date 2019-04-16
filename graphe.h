@@ -23,11 +23,6 @@ class graphe {
         ///Affiche le graphe
         void afficher() const;
 
-        /// Kruskal
-        void kruskal();
-        void voisin(int Sommet);
-
-
     private:
         int m_ordre=0;
         int m_taille;
