@@ -78,25 +78,25 @@ void graphe::afficher() const{                              ///Affiche le graphe
 
 void graphe::voisin(int Sommet)
 {
-    for (int i=0;i<m_aretes.size();i++)
+    /*for (int i=0;i<m_aretes.size();i++)
         if ((Sommet == m_aretes.find(i)->second->getSomArrive()) || (Sommet == m_aretes.find(i)->second->getSomDepart()))
         {
             std::cout <<Sommet;
-        }
-}
+ */       }
+
 
 void graphe::kruskal() ///Prim
 {
     std::unordered_map<int,arete*> arbre;
     int indice1=0;
     std::vector <int> marques;
-    std::string Sommet;
+    int Sommet;
     int x,y,ymin;
     float min;
 
     Sommet=rand()%m_ordre;
     Sommet='0';
-    marques[Sommet]='1';
+    marques[Sommet]=1;
 
     while (indice1<m_ordre-1)
     {
