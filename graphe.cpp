@@ -28,8 +28,8 @@ graphe::graphe(std::string nomFichierGraphe, std::string nomFichierArete) {
     ifs >> m_taille;
     if ( ifs.fail() )
         throw std::runtime_error("Problème lecture taille du graphe");
-    std::string id_somDepart;
-    std::string id_somArrive;
+    int id_somDepart;
+    int id_somArrive;
     //lecture des aretes
     for (int i=0; i<m_taille; ++i){
         //lecture des ids des deux extrémitées

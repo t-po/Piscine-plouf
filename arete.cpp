@@ -5,7 +5,7 @@
 #include <iostream>
 #include "arete.h"
 
-arete::arete(int id, std::string mSomArrive, std::string mSomDepart) : m_somArrive(mSomArrive), m_somDepart(mSomDepart), m_id(id) {
+arete::arete(int id, int mSomArrive, int mSomDepart) : m_somArrive(mSomArrive), m_somDepart(mSomDepart), m_id(id) {
 }
 
 arete::~arete() {
