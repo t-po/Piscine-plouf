@@ -25,6 +25,7 @@ class graphe {
 
         /// Kruskal
         void kruskal();
+        void voisin(int Sommet);
 
 
     private:

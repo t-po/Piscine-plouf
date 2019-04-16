@@ -76,16 +76,27 @@ void graphe::afficher() const{                              ///Affiche le graphe
     }
 }
 
+void graphe::voisin(int Sommet)
+{
+    for (int i=0;i<m_aretes.size();i++)
+        if ((Sommet == m_aretes.find(i)->second->getSomArrive()) || (Sommet == m_aretes.find(i)->second->getSomDepart()))
+        {
+            std::cout <<Sommet;
+        }
+}
+
 void graphe::kruskal() ///Prim
 {
     std::unordered_map<int,arete*> arbre;
     int indice1=0;
-    int *marques;
-    int s,x,y,ymin;
+    std::vector <int> marques;
+    std::string Sommet;
+    int x,y,ymin;
     float min;
 
-    s=rand()%m_ordre;
-    marques[s]= 1;
+    Sommet=rand()%m_ordre;
+    Sommet='0';
+    marques[Sommet]='1';
 
     while (indice1<m_ordre-1)
     {
@@ -94,6 +105,8 @@ void graphe::kruskal() ///Prim
             if(marques[x])
                 for (y=0;y<m_ordre;y++)
                     std::cout <<" ";
+                voisin (Sommet);
+
     }
     std::cout <<m_taille << std::endl;
 }

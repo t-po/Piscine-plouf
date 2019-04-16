@@ -17,6 +17,9 @@ class arete {
         void ajouterPonderation(float);
         void afficherAretes()const;
 
+        std::string getSomDepart (){return m_somDepart;};
+        std::string getSomArrive (){return m_somArrive;};
+
     private:
         int m_id;
         std::string m_somDepart;
