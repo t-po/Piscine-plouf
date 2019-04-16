@@ -4,8 +4,13 @@
 
 #include <iostream>
 #include "arete.h"
+#include <vector>
 
 arete::arete(int id, int mSomArrive, int mSomDepart) : m_somArrive(mSomArrive), m_somDepart(mSomDepart), m_id(id) {
+}
+
+arete::arete() {
+
 }
 
 arete::~arete() {
@@ -26,4 +31,12 @@ void arete::afficherAretes() const{
     std::cout<<"Sommet de depart : " <<m_somDepart <<std::endl;
     std::cout<<"Sommet d'arrive :" <<m_somArrive <<std::endl;
 }
+
+
+
+const float arete::getMPonderation(int id) const {
+    return m_ponderation[id];
+}
+
+
 

@@ -16,12 +16,17 @@ class graphe {
         ///constructeur qui charge le graphe en mémoire
         //format du fichier ordre/liste des sommets/taille/liste des arêtes
         graphe(std::string,std::string);
+        graphe(int , int,  std::unordered_map<int,sommet*>,std::unordered_map<int,arete*>);
 
         ///Destructeur
         ~graphe();
 
         ///Affiche le graphe
         void afficher() const;
+
+        graphe prim();
+
+        void trierAretesPourToutSommet();   ///Pour chaque sommet : trie le vecteur d'aretes relié au sommet
 
 
     private:

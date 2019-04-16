@@ -41,3 +41,24 @@ sommet::~sommet()
 {
     //dtor
 }
+
+void sommet::ajouterAretes(const arete * arete) {
+    m_arete.push_back(arete);
+}
+
+void sommet::trierAretes() {        ///Trie les aretes relié au sommet dans l'ordre croissant de la première pondérations.
+    bool a=false;
+    float poidsMax= m_arete[0]->getMPonderation(0);
+    const arete* tmp;
+    while(!a) {
+        a=true;
+        if (m_arete[a + 1]->getMPonderation(0) > poidsMax) {
+            poidsMax = m_arete[a]->getMPonderation(0);
+        } else {
+            tmp = m_arete[a + 1];
+            m_arete[a + 1] = m_arete[a];
+            m_arete[a] = tmp;
+            a=false;
+        }
+    }
+}

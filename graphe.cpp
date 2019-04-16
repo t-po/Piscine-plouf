@@ -1,3 +1,7 @@
+#include <utility>
+
+#include <utility>
+
 //
 // Created by utilisateur on 15/04/2019.
 //
@@ -36,8 +40,10 @@ graphe::graphe(std::string nomFichierGraphe, std::string nomFichierArete) {
         ifs>>id; if(ifs.fail()) throw std::runtime_error("Probleme lecture id arete");
         ifs>>id_somDepart; if(ifs.fail()) throw std::runtime_error("Probleme lecture arete sommet Depart");
         ifs>>id_somArrive; if(ifs.fail()) throw std::runtime_error("Probleme lecture arete sommet Arrivee");
-
-        m_aretes.insert({id,new arete{id,id_somDepart,id_somArrive}});
+        auto* actualArete= new arete{id,id_somDepart,id_somArrive};
+        m_sommets.find(id_somDepart)->second->ajouterAretes(actualArete); ///Ajoute l'arete au vecteur des aretes relié au sommet
+        m_sommets.find(id_somArrive)->second->ajouterAretes(actualArete); ///Ajoute l'arete au vecteur des aretes relié au sommet
+        m_aretes.insert({id,actualArete});
     }
     ifs.close();
     std::ifstream ifs2{nomFichierArete};
@@ -56,6 +62,10 @@ graphe::graphe(std::string nomFichierGraphe, std::string nomFichierArete) {
             (m_aretes.find(id))->second->ajouterPonderation(ponde);
         }
     }
+    trierAretesPourToutSommet();  ///Pour chaque sommet : trie le vecteur d'aretes relié au sommet
+}
+
+graphe::graphe(int mtaille, int mordre, std::unordered_map<int, sommet *> msommets, std::unordered_map<int, arete *> maretes) : m_taille(mtaille), m_ordre(mordre), m_sommets(std::move(msommets)), m_aretes(std::move(maretes)) {
 
 }
 
@@ -75,7 +85,18 @@ void graphe::afficher() const{                              ///Affiche le graphe
         ar.second->afficherAretes();
     }
 }
+/*------------------A Hippo-------------------------
+graphe graphe::prim() {
+    m_sommets.find(0)->second->trierAretes();
 
+    return graphe(int , int , std::unordered_map<int, sommet *>, std::unordered_map<int, arete*>);
+}
+*/--------------------------------------------------
+void graphe::trierAretesPourToutSommet() {
+    for (auto so:m_sommets){            ///Pour chaque sommet : trie le vecteur d'aretes relié au sommet
+        so.second->trierAretes();
+    }
+}
 
 
 graphe::~graphe()

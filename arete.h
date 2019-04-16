@@ -12,13 +12,15 @@ class vector;
 
 class arete {
     public:
-        arete(int, int mSomArrive, int mSomDepart);
+    arete();
+    arete(int, int mSomArrive, int mSomDepart);
         ~arete();
         void ajouterPonderation(float);
         void afficherAretes()const;
 
         int getSomDepart (){return m_somDepart;};
         int getSomArrive (){return m_somArrive;};
+        const float getMPonderation(int) const;
 
     private:
         int m_id;
