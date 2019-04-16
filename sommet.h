@@ -20,6 +20,8 @@ class sommet {
         void afficherData() const;
         void afficherVoisins() const;
         int getDegre();
+    double getX();
+    double getY();
 
     private:
         /// Voisinage : liste d'adjacence

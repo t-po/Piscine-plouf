@@ -37,6 +37,17 @@ int sommet::getDegre(){
 
     return degre;
 }
+
+double sommet::getY()
+{
+    return m_y;
+}
+
+double sommet::getX()
+{
+    return m_x;
+}
+
 sommet::~sommet()
 {
     //dtor

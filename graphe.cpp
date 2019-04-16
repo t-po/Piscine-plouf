@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iostream>
 #include "graphe.h"
+#include "Svgfile.h"
 #include <unordered_map>
 #include <unordered_set>
 #include <set>
@@ -51,6 +52,16 @@ void graphe::afficher() const{                              ///Affiche le graphe
         it.second->afficherVoisins();
         std::cout<<"  Degre:"<< it.second->getDegre()<<std::endl;
     }
+}
+
+void graphe::afficher_graphe(Svgfile& fic)
+{
+    for ( auto  it = m_sommets.begin(); it != m_sommets.end(); ++it )
+    {
+        fic.addDisk(it->second->getX(),it->second->getY(),5,"black");
+
+    }
+
 }
 
 graphe::~graphe()

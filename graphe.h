@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include "sommet.h"
+#include "Svgfile.h"
 
 
 class graphe {
@@ -21,6 +22,8 @@ class graphe {
 
         ///Affiche le graphe
         void afficher() const;
+        void afficher_graphe(Svgfile& fic);
+
 
     private:
         int m_ordre=0;
