@@ -76,13 +76,13 @@ void graphe::afficher() const{                              ///Affiche le graphe
     }
 }
 
-void graphe::voisin(int Sommet)
-{
-    /*for (int i=0;i<m_aretes.size();i++)
-        if ((Sommet == m_aretes.find(i)->second->getSomArrive()) || (Sommet == m_aretes.find(i)->second->getSomDepart()))
-        {
-            std::cout <<Sommet;
- */       }
+void graphe::voisin(int Sommet) {
+   /* for (int i = 0; i < m_aretes.size(); i++)
+        if ((Sommet == m_aretes.find(i)->second->getSomArrive()) ||
+            (Sommet == m_aretes.find(i)->second->getSomDepart())) {
+            std::cout << Sommet;
+        }*/
+}
 
 
 void graphe::kruskal() ///Prim
