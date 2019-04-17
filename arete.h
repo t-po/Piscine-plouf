@@ -12,8 +12,15 @@ class vector;
 
 class arete {
     public:
-        arete(int , int , int,std::vector<float>);
+        arete(int, int mSomArrive, int mSomDepart);
+        ~arete();
+        void ajouterPonderation(float);
+        void afficherAretes()const;
 
+        int getId () {return m_id;};
+        int getSomDepart (){return m_somDepart;};
+        int getSomArrive (){return m_somArrive;};
+        std::vector<float> getPond() {return m_ponderation;};
     private:
         int m_id;
         int m_somDepart;

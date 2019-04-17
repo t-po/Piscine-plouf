@@ -7,15 +7,12 @@ int main() {
     Svgfile svgout;
     svgout.addGrid(100,true,"lightgrey");
     std::string id;
-    graphe g{"../files/broadway.txt","../files/broadway_weights_0.txt"};
-    g.afficher();                                                           ///Affiche le graphe
-    std::cout<<"Veuillez choisir l'identifiant d'un sommet "<<std::endl;
-    std::cin >> id;                                                   ///Applique le DFS et l'affiche
-    /*int ncc=g.rechercher_afficherToutesCC();*/                            ///Variable non utilisé
+    graphe g{"../files/triville.txt","../files/triville_weights_0.txt"};
+    g.afficher();///Affiche le graphe
+    g.afficher_graphe(svgout);
 
 
-    std::cout<<" "<<std::endl;
-    std::cout<<"Le graphe est-il eulerien ?"<<std::endl<<std::endl;
+
 
     return 0;
 }
@@ -45,4 +42,11 @@ void svgTest()
         svgout.addCross(400, y, 15);
     /// L'objet svgout est automatiquement libéré à la sortie
     /// de ce sous-programme : le fichier output.svg est alors fermé
+}
+
+
+void pareto(std::vector<graphe> vectGraphe)
+{
+    std::unordered_map<double ,std::vector<float>> map;
+    
 }

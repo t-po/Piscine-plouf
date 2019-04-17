@@ -9,6 +9,7 @@
 #include <unordered_set>
 #include "sommet.h"
 #include "Svgfile.h"
+#include "arete.h"
 
 
 class graphe {
@@ -23,13 +24,16 @@ class graphe {
         ///Affiche le graphe
         void afficher() const;
         void afficher_graphe(Svgfile& fic);
+        std::vector <float>poid_total();
 
 
     private:
         int m_ordre=0;
         int m_taille;
+
         /// Le réseau est constitué d'une collection de sommets
-        std::unordered_map<std::string,sommet*> m_sommets;//stockée dans une map (clé=id du sommet, valeur= pointeur sur le sommet)
+        std::unordered_map<int ,sommet*> m_sommets;//stockée dans une map (clé=id du sommet, valeur= pointeur sur le sommet)
+        std::unordered_map<int,arete*> m_aretes;
 };
 
 
