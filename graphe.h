@@ -8,7 +8,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include "sommet.h"
-#include "arete.h"
+#include "Arete.h"
 
 
 class graphe {
@@ -16,6 +16,7 @@ class graphe {
         ///constructeur qui charge le graphe en mémoire
         //format du fichier ordre/liste des sommets/taille/liste des arêtes
         graphe(std::string,std::string);
+        graphe(int mtaille, int mordre,  std::unordered_map<int,sommet*> msommets,std::unordered_map<int,Arete*> maretes);
 
         ///Destructeur
         ~graphe();
@@ -23,13 +24,21 @@ class graphe {
         ///Affiche le graphe
         void afficher() const;
 
+        graphe* prim();
+
+        void trierAretesPourToutSommet();   ///Pour chaque sommet : trie le vecteur d'aretes relié au sommet
+
+        bool estPresent( int ,std::unordered_map<int,sommet*>);
+
+        void afficherAretePourToutSommet();
+
     private:
-        int m_ordre=0;
+        int m_ordre;
         int m_taille;
 
         /// Le réseau est constitué d'une collection de sommets
         std::unordered_map<int ,sommet*> m_sommets;//stockée dans une map (clé=id du sommet, valeur= pointeur sur le sommet)
-        std::unordered_map<int,arete*> m_aretes;
+        std::unordered_map<int,Arete*> m_aretes;
 };
 
 
