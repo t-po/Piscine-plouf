@@ -8,10 +8,10 @@
 
 #include <fstream>
 #include <iostream>
-#include "graphe.h"
 #include <unordered_map>
 #include <unordered_set>
 #include <set>
+#include "graphe.h"
 
 graphe::graphe(std::string nomFichierGraphe, std::string nomFichierArete) {
     std::ifstream ifs{nomFichierGraphe};
@@ -37,12 +37,12 @@ graphe::graphe(std::string nomFichierGraphe, std::string nomFichierArete) {
     //lecture des aretes
     for (int i=0; i<m_taille; ++i){
         //lecture des ids des deux extrémitées
-        ifs>>id; if(ifs.fail()) throw std::runtime_error("Probleme lecture id arete");
-        ifs>>id_somDepart; if(ifs.fail()) throw std::runtime_error("Probleme lecture arete sommet Depart");
-        ifs>>id_somArrive; if(ifs.fail()) throw std::runtime_error("Probleme lecture arete sommet Arrivee");
-        auto* actualArete= new arete{id,id_somDepart,id_somArrive};
-        m_sommets.find(id_somDepart)->second->ajouterAretes(actualArete); ///Ajoute l'arete au vecteur des aretes relié au sommet
-        m_sommets.find(id_somArrive)->second->ajouterAretes(actualArete); ///Ajoute l'arete au vecteur des aretes relié au sommet
+        ifs>>id; if(ifs.fail()) throw std::runtime_error("Probleme lecture id Arete");
+        ifs>>id_somDepart; if(ifs.fail()) throw std::runtime_error("Probleme lecture Arete sommet Depart");
+        ifs>>id_somArrive; if(ifs.fail()) throw std::runtime_error("Probleme lecture Arete sommet Arrivee");
+        auto* actualArete= new Arete{id,id_somDepart,id_somArrive};
+        m_sommets.find(id_somDepart)->second->ajouterAretes(actualArete); ///Ajoute l'Arete au vecteur des aretes relié au sommet
+        m_sommets.find(id_somArrive)->second->ajouterAretes(actualArete); ///Ajoute l'Arete au vecteur des aretes relié au sommet
         m_aretes.insert({id,actualArete});
     }
     ifs.close();
@@ -56,16 +56,16 @@ graphe::graphe(std::string nomFichierGraphe, std::string nomFichierArete) {
     float ponde;
     ifs2>>nb_ponde;
     for (int i=0; i<m_taille; ++i){
-        ifs2>>id; if(ifs2.fail()) throw std::runtime_error("Probleme lecture id arete");
+        ifs2>>id; if(ifs2.fail()) throw std::runtime_error("Probleme lecture id Arete");
         for (int j=0;j<nb_ponde;j++){
-            ifs2>>ponde; if(ifs2.fail()) throw std::runtime_error("Probleme lecture poids de l'arete");
+            ifs2>>ponde; if(ifs2.fail()) throw std::runtime_error("Probleme lecture poids de l'Arete");
             (m_aretes.find(id))->second->ajouterPonderation(ponde);
         }
     }
     trierAretesPourToutSommet();  ///Pour chaque sommet : trie le vecteur d'aretes relié au sommet
 }
 
-graphe::graphe(int mtaille, int mordre, std::unordered_map<int, sommet *> msommets, std::unordered_map<int, arete *> maretes) : m_taille(mtaille), m_ordre(mordre), m_sommets(std::move(msommets)), m_aretes(std::move(maretes)) {
+graphe::graphe(int mtaille, int mordre, std::unordered_map<int, sommet *> msommets, std::unordered_map<int, Arete *> maretes) : m_taille(mtaille), m_ordre(mordre), m_sommets(msommets), m_aretes(maretes) {
 
 }
 
@@ -85,16 +85,75 @@ void graphe::afficher() const{                              ///Affiche le graphe
         ar.second->afficherAretes();
     }
 }
-/*------------------A Hippo-------------------------
-graphe graphe::prim() {
-    m_sommets.find(0)->second->trierAretes();
 
-    return graphe(int , int , std::unordered_map<int, sommet *>, std::unordered_map<int, arete*>);
+graphe* graphe::prim() {
+    ///Décalarations des variables
+    std::unordered_map<int, sommet*> nouveauxSommets;               ///unordored map de sommet du graphe donner par Prim
+    std::unordered_map<int, Arete*> nouvellesAretes;           ///unordored map d'aretes du graphe donner par Prim
+    std::vector<std::vector< Arete*>> listAretesSommet;        ///Vecteur de vecteur d'aretes. Pour trouver la branche de poids minimum.
+    bool isPresentDep;                  ///Variable pour savoir si le sommet de départ est déjà découvert
+    bool isPresentArr;                  ///Variable pour savoir si le sommet de d'arrivé est déjà découvert
+    float poidMin=(m_sommets.find(0)->second->getMAretePourSommet())[0]->getMPonderation(0); ///prendra le plus petit poids de listAretesSommet
+    int id=0;                           ///id de l'arete de plus petit poids.
+
+    nouveauxSommets.insert({m_sommets.find(0)->second->getMId(),m_sommets.find(0)->second}); ///Sommet0 insérer dans la nouvelle unordored map
+    listAretesSommet.push_back(m_sommets.find(0)->second->getMAretePourSommet());
+    while (nouveauxSommets.size()<m_sommets.size()){                                  ///Pour chaque sommet
+        if (listAretesSommet.size()>1) {
+            for (int i = 0; i < listAretesSommet.size(); ++i) {                       ///Recherche du poid minimal
+                if (listAretesSommet[i][0]->getMPonderation(0) < poidMin) {
+                    poidMin = listAretesSommet[i][0]->getMPonderation(0);
+                    id = i;
+                }
+            }
+        }
+        isPresentDep = estPresent((listAretesSommet[id][0])->getSomDepart(),
+                                  nouveauxSommets); ///le sommet de départ est-il déjà découvert
+        isPresentArr = estPresent(listAretesSommet[id][0]->getSomArrive(),
+                                  nouveauxSommets);   ///le sommet de d'arrivé est-il déjà découvert
+        if (!isPresentDep || !isPresentArr) {                                                ///Si un des deux n'est pas découvert
+            nouvellesAretes.insert(
+                    {listAretesSommet[id][0]->getMId(), listAretesSommet[id][0]});    ///On enregistre l'arete
+            if (!isPresentArr) {                                                              ///Si c'est le sommet d'arrivé qui n'est pas parcourue
+                nouveauxSommets.insert({listAretesSommet[id][0]->getSomArrive(),
+                                        m_sommets.find(listAretesSommet[id][0]->getSomArrive())->second});  ///on l'insère dans le tableau pour qu'il le soit
+                listAretesSommet.push_back(m_sommets.find(listAretesSommet[id][0]->getSomArrive())->second->getMAretePourSommet());///met son vecteur d'arete dans listAretesSommet
+            }
+            else {                                                                            ///Si c'est le sommet de départ qui n'est pas parcourue
+                nouveauxSommets.insert({listAretesSommet[id][0]->getSomDepart(),
+                                        m_sommets.find(listAretesSommet[id][0]->getSomDepart())->second});   ///on l'insère dans le tableau pour qu'il le soit
+                listAretesSommet.push_back(m_sommets.find(listAretesSommet[id][0]->getSomDepart())->second->getMAretePourSommet());///met son vecteur d'arete dans listAretesSommet
+            }
+
+        }
+        listAretesSommet[id].erase(listAretesSommet[id].begin());
+        if (listAretesSommet[id].empty()){
+            listAretesSommet.erase(listAretesSommet.begin()+id);}
+        poidMin=listAretesSommet[id][0]->getMPonderation(0); ///prend le premier poids de la premiere arete du vecteur de vecteur
+    }
+    graphe* g=new graphe(nouvellesAretes.size(), nouveauxSommets.size(), nouveauxSommets,nouvellesAretes);
+    return (g);
 }
-*/--------------------------------------------------
+
 void graphe::trierAretesPourToutSommet() {
     for (auto so:m_sommets){            ///Pour chaque sommet : trie le vecteur d'aretes relié au sommet
         so.second->trierAretes();
+    }
+}
+
+bool graphe::estPresent( int id, std::unordered_map<int, sommet *> table) {
+    for(auto it:table){
+        if(it.second->getMId() == id){
+            return true;
+        }
+    }
+    return false;
+}
+
+void graphe::afficherAretePourToutSommet() {
+    for(auto so:m_sommets){
+        so.second->afficherAretePourSommet();
+        std::cout<<"ici"<<std::endl;
     }
 }
 

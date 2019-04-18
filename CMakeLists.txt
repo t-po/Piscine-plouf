@@ -3,4 +3,4 @@ project(Piscine)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(Piscine main.cpp graphe.cpp graphe.h sommet.cpp sommet.h arete.cpp arete.h)
+add_executable(Piscine main.cpp graphe.cpp graphe.h sommet.cpp sommet.h Arete.cpp Arete.h)

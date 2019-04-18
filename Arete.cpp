@@ -3,25 +3,25 @@
 //
 
 #include <iostream>
-#include "arete.h"
+#include "Arete.h"
 #include <vector>
 
-arete::arete(int id, int mSomArrive, int mSomDepart) : m_somArrive(mSomArrive), m_somDepart(mSomDepart), m_id(id) {
+Arete::Arete(int id, int mSomArrive, int mSomDepart) : m_somArrive(mSomArrive), m_somDepart(mSomDepart), m_id(id) {
 }
 
-arete::arete() {
-
-}
-
-arete::~arete() {
+Arete::Arete() {
 
 }
 
-void arete::ajouterPonderation(float ponde) {
+Arete::~Arete() {
+
+}
+
+void Arete::ajouterPonderation(float ponde) {
     m_ponderation.push_back(ponde);
 }
 
-void arete::afficherAretes() const{
+void Arete::afficherAretes() const{
     std::cout<<"  id :"<< m_id <<std::endl;
     std::cout<<"Poids : ";
     for(auto p:m_ponderation) {
@@ -34,9 +34,15 @@ void arete::afficherAretes() const{
 
 
 
-const float arete::getMPonderation(int id) const {
+const float Arete::getMPonderation(int id) const {
     return m_ponderation[id];
 }
+
+int Arete::getMId()  {
+    return m_id;
+}
+
+
 
 
 
