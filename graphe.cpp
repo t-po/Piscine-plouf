@@ -12,6 +12,7 @@
 #include <unordered_set>
 #include <set>
 #include "graphe.h"
+#include "Svgfile.h"
 
 graphe::graphe(std::string nomFichierGraphe, std::string nomFichierArete) {
     std::ifstream ifs{nomFichierGraphe};
@@ -100,7 +101,7 @@ graphe* graphe::prim() {
     listAretesSommet.push_back(m_sommets.find(0)->second->getMAretePourSommet());
     while (nouveauxSommets.size()<m_sommets.size()){                                  ///Pour chaque sommet
         if (listAretesSommet.size()>1) {
-            for (int i = 0; i < listAretesSommet.size(); ++i) {                       ///Recherche du poid minimal
+            for (unsigned int i = 0; i < listAretesSommet.size(); ++i) {                       ///Recherche du poid minimal
                 if (listAretesSommet[i][0]->getMPonderation(0) < poidMin) {
                     poidMin = listAretesSommet[i][0]->getMPonderation(0);
                     id = i;
@@ -156,6 +157,100 @@ void graphe::afficherAretePourToutSommet() {
         std::cout<<"ici"<<std::endl;
     }
 }
+
+
+void graphe::afficher_graphe(Svgfile& fic)
+{
+    double x1,x2,y1,y2,X,Y,X2,Y2;
+    for ( auto  it = m_aretes.begin(); it != m_aretes.end(); ++it )
+    {
+        std::unordered_map<int,sommet*>::const_iterator got = m_sommets.find (it->second->getSomDepart());
+        if ( got != m_sommets.end())
+        {
+            x1 = got->second->getX();
+            y1 = got->second->getY();
+        }
+
+        got = m_sommets.find (it->second->getSomArrive());
+        if ( got != m_sommets.end())
+        {
+            x2 = got->second->getX();
+            y2 = got->second->getY();
+        }
+        fic.addLine(x1,y1,x2,y2,"black");
+        X = (x1+x2)/2;
+        Y = (y1+y2)/2 - 2;
+        Y2 = Y;
+        X2 = X;
+        //for(auto p:it->second->getPond()) {
+        if(y1 != y2 && x1 != x2)
+        {
+            if (x1<x2)
+            {
+                X2 = X;
+                Y2= Y+15;
+                X = X-15;
+            }
+            if(x1>x2)
+            {
+                X2 = X-10;
+                Y2= Y+15;
+                X = X+15;
+            }
+
+        }
+        if(x1 == x2)
+        {
+            X2 = X+2;
+            X = X-17;
+
+        }
+        if (y1 == y2)
+        {
+            X2 = X;
+            Y2= Y+15;
+        }
+
+            fic.addText(X-7,Y,it->second->getMPonderation(0),"red");
+            fic.addText(X,Y,":","black");
+            fic.addText(X+7,Y,it->second->getMPonderation(1),"red");
+            fic.addText(X2,Y2,it->second->getMId());
+        //}
+
+
+    }
+    for ( auto  it = m_sommets.begin(); it != m_sommets.end(); ++it )
+    {
+        fic.addDisk(it->second->getX(),it->second->getY(),10,"black");
+        fic.addText(it->second->getX()-5,it->second->getY()+5,it->first,"white");
+
+    }
+
+
+
+
+}
+
+/*std::vector <float> graphe::poid_total()
+{
+    float poid1 = 0;
+    float poid2 = 0;
+    std :: vector < float> poidTotal;
+
+
+    for ( auto  it = m_aretes.begin(); it != m_aretes.end(); ++it )
+    {
+        std::vector<float> pond = it->second->getPond();
+        poid1 = poid1 + pond[0];
+        poid2 = poid2 + pond[1];
+
+    }
+    poidTotal[0] = poid1;
+    poidTotal[1] = poid2;
+
+    return poidTotal;
+
+}*/
 
 
 graphe::~graphe()

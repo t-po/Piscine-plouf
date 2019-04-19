@@ -9,6 +9,7 @@
 #include <unordered_set>
 #include "sommet.h"
 #include "Arete.h"
+#include "Svgfile.h"
 
 
 class graphe {
@@ -32,6 +33,8 @@ class graphe {
 
         void afficherAretePourToutSommet();
 
+        void afficher_graphe(Svgfile& fic);
+        //std::vector <float>poid_total();
     private:
         int m_ordre;
         int m_taille;

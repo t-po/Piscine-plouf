@@ -26,6 +26,8 @@ class sommet {
         std::vector< Arete *> getMAretePourSommet() ;
         int getMId() ;
         void afficherAretePourSommet();
+    double getX();
+    double getY();
 
     private:
         /// Voisinage : liste d'adjacence
@@ -33,10 +35,8 @@ class sommet {
         std::vector< Arete*> m_aretePourSommet;
 
 
-    /// Données spécifiques du sommet
-        int m_id;
-
-    // Identifiant
+        /// Données spécifiques du sommet
+        int m_id; // Identifiant
         double m_x, m_y; // Position
 };
 
