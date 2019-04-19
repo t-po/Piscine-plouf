@@ -151,7 +151,7 @@ void graphe::afficher_graphe(Svgfile& fic)
 
 }
 
-std::vector <float> graphe::poid_total()
+/*std::vector <float> graphe::poid_total()
 {
     float poid1 = 0;
     float poid2 = 0;
@@ -170,7 +170,7 @@ std::vector <float> graphe::poid_total()
 
     return poidTotal;
 
-}
+}*/
 
 
 graphe::~graphe()

@@ -24,9 +24,7 @@ class graphe {
         ///Affiche le graphe
         void afficher() const;
         void afficher_graphe(Svgfile& fic);
-        std::vector <float>poid_total();
-
-
+        //std::vector <float>poid_total();
     private:
         int m_ordre=0;
         int m_taille;

@@ -8,12 +8,9 @@ int main() {
     svgout.addGrid(100,true,"lightgrey");
     std::string id;
     graphe g{"../files/triville.txt","../files/triville_weights_0.txt"};
+
     g.afficher();///Affiche le graphe
     g.afficher_graphe(svgout);
-
-
-
-
     return 0;
 }
 
@@ -44,9 +41,3 @@ void svgTest()
     /// de ce sous-programme : le fichier output.svg est alors fermé
 }
 
-
-void pareto(std::vector<graphe> vectGraphe)
-{
-    std::unordered_map<double ,std::vector<float>> map;
-    
-}
