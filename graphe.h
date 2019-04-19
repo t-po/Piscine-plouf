@@ -26,7 +26,7 @@ class graphe {
         ///Brute
         void brute();
         bool *decToBinary(int n);
-        int connexite(std::vector< bool> b2);
+        bool connexite(std::vector< bool> b2);
 
     private:
         int m_ordre=0;

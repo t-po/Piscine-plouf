@@ -128,7 +128,7 @@ void graphe::brute()
         if (cmpAretes==(m_ordre-1))
             solAdmissible.push_back(b1);
 
-        //// On reinitialise les valeurs
+        /// On reinitialise les valeurs
         b1.erase(b1.begin(),b1.end());
         cmpAretes=0;
     }
@@ -159,7 +159,7 @@ void graphe::brute()
 }
 
 
-int graphe::connexite(std::vector <bool> b2)
+bool graphe::connexite(std::vector <bool> b2)
 {
 
     std::unordered_map<int,int> connexiteDuSommet; /// La connexité de chaque sommet
