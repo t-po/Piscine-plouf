@@ -76,6 +76,156 @@ void graphe::afficher() const{                              ///Affiche le graphe
     }
 }
 
+bool * graphe::decToBinary(int n)
+{
+
+    bool *binNum = new bool [32];
+
+    for(size_t i=0;i<32;i++)
+        binNum[i]=0;
+
+
+    int i = 0;
+    while (n > 0) {
+        binNum[i] = n % 2;
+        n = n / 2;
+        i++;
+    }
+    //std::cout<<"test : ";
+
+
+        return  binNum;
+}
+
+
+
+void graphe::brute()
+{
+
+    int cmpAretes=0;
+    int filtre2;
+    int nbCasPossibles= pow(2,m_taille);    /// Enumaration des cas possibles
+    std::vector<std::vector<bool> > solAdmissible;
+    std::vector<std::vector<bool> > solVraimentAdmissible;
+    std::vector <bool> b2;
+
+    for (int j=0;j<nbCasPossibles;j++)  /// Réalisation des différents cas
+    {
+        bool *binNum = decToBinary(j);
+        std::vector <bool> b1;
+
+        for (int k = 0;k<m_taille;k++)  ///On rogne le tableau
+        {
+            b1.push_back(binNum[k]);
+        }
+
+        for (std::size_t i = 0; i < b1.size(); ++i) {
+            if (b1[i]==1)
+                cmpAretes++;
+        }
+
+        /// Premier tri
+        if (cmpAretes==(m_ordre-1))
+            solAdmissible.push_back(b1);
+
+        //// On reinitialise les valeurs
+        b1.erase(b1.begin(),b1.end());
+        cmpAretes=0;
+    }
+
+    /// Deuxième tri
+   for (size_t i = 0; i<solAdmissible.size(); i++)
+    {
+       filtre2=connexite(solAdmissible[i]);
+
+       /// Si la connexité est positive, on ajoute le vecteur à un nouveau vecteur de solutions
+        if (filtre2==1)
+        {
+            solVraimentAdmissible.push_back(solAdmissible[i]);
+        }
+    }
+
+   ///On affiche toutes les solutions
+    for (int i = 0;i<solAdmissible.size();i++)
+    {
+        for (int j = m_taille-1; j >= 0; j--)
+            std::cout << solAdmissible[i][j];
+        std::cout<<'\n';
+    }
+
+    /// Affichage du nombre de solutions Admissibles
+    std::cout << solVraimentAdmissible.size() <<'\n';
+
+}
+
+
+int graphe::connexite(std::vector <bool> b2)
+{
+
+    std::unordered_map<int,int> connexiteDuSommet; /// La connexité de chaque sommet
+    std::unordered_map<int,arete*> aretesStockes;   /// Toutes les aretes sont stockés dedans
+    int id=0;
+    int temp;
+
+    /// On initialise la connexité de chaque sommet a la meme valeure que son id
+    for (int i=0;i<m_ordre;i++)
+    {
+        connexiteDuSommet.insert({i,i});
+    }
+
+
+    for (int i= 0; i< b2.size();i++)
+    {
+        ///On insère les aretes qui existent dans un nouveau vecteur d'aretes
+        if (b2[i]==1)
+        {
+            aretesStockes.insert( {id, m_aretes.find(i)->second});
+            id++;   /// id augmente a chaque fois, ainsi on a des valeurs pour 0,1,2,... au lieu d'avoir 1,3,4,...
+        }
+    }
+
+    /// Pour toutes les aretes, on vérifie la connexité
+    for (size_t j=0;j<aretesStockes.size();j++)
+    {
+
+        ///Si deux Sommets on la meme composante connexe, alors on crée un cycle, donc ce n'est pas connexe
+        /// (pas vraiment utile en fait)
+       if(connexiteDuSommet.find(aretesStockes.find(j)->second->getSomArrive())->second
+       == connexiteDuSommet.find(aretesStockes.find(j)->second->getSomDepart())->second)
+        {
+            return 0;
+        }
+
+       /// Deux sommets reliés par une arete ont une composante connexe différente,
+       /// On veux qu'ils aient la même et que leurs prédécesseurs aussi
+       /// Pour ça, on stock la valeur de l'un dans temp
+       temp =connexiteDuSommet.find(aretesStockes.find(j)->second->getSomDepart())->second;
+
+       /// Les deux prennent la même valeure
+       connexiteDuSommet.find(aretesStockes.find(j)->second->getSomDepart())->second
+       = connexiteDuSommet.find(aretesStockes.find(j)->second->getSomArrive())->second;
+
+       /// Puis tous les sommets avec la même composante que l'ancien prennent la nouvelle valeure
+            for (size_t i=0;i<connexiteDuSommet.size();i++)
+            {
+                if(connexiteDuSommet.find(i)->second==temp)
+                {
+                    connexiteDuSommet.find(i)->second
+                    =connexiteDuSommet.find(aretesStockes.find(j)->second->getSomArrive())->second;
+                }
+            }
+    }
+
+    /// Si deux Sommets ont une connexité différente, le graphe n'est pas connexe
+    for(size_t i=1;i<connexiteDuSommet.size(); i++)
+    {
+        if(connexiteDuSommet.find(i-1)->second!=connexiteDuSommet.find(i)->second)
+            return 0;
+    }
+
+    /// Sinon il est connexe
+    return 1;
+}
 
 graphe::~graphe()
 =default;
