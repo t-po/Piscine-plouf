@@ -78,32 +78,23 @@ void graphe::afficher() const{                              ///Affiche le graphe
 
 bool * graphe::decToBinary(int n)
 {
-
     bool *binNum = new bool [32];
-
     for(size_t i=0;i<32;i++)
-        binNum[i]=0;
-
-
+        binNum[i]=false;
     int i = 0;
     while (n > 0) {
         binNum[i] = n % 2;
         n = n / 2;
         i++;
     }
-    //std::cout<<"test : ";
-
-
         return  binNum;
 }
-
-
 
 std::unordered_map< int,std::vector<float> > graphe::brute()
 {
 
     int cmpAretes=0;
-    int filtre2;
+    bool filtre2;
     int nbCasPossibles= pow(2,m_taille);    /// Enumaration des cas possibles
     std::vector<std::vector<bool> > solAdmissible;
     std::vector<std::vector<bool> > solVraimentAdmissible;
@@ -140,7 +131,7 @@ std::unordered_map< int,std::vector<float> > graphe::brute()
        filtre2=connexite(solAdmissible[i]);
 
        /// Si la connexité est positive, on ajoute le vecteur à un nouveau vecteur de solutions
-        if (filtre2==1)
+        if (filtre2)
         {
             solVraimentAdmissible.push_back(solAdmissible[i]);
         }
@@ -168,6 +159,7 @@ std::unordered_map< int,std::vector<float> > graphe::brute()
 
     /// Affichage du nombre de solutions Admissibles
     std::cout << solVraimentAdmissible.size() <<'\n';
+
 return poidDimensionsGraphe;
 }
 
@@ -205,7 +197,7 @@ bool graphe::connexite(std::vector <bool> b2)
        if(connexiteDuSommet.find(aretesStockes.find(j)->second->getSomArrive())->second
        == connexiteDuSommet.find(aretesStockes.find(j)->second->getSomDepart())->second)
         {
-            return 0;
+            return false;
         }
 
        /// Deux sommets reliés par une arete ont une composante connexe différente,
@@ -232,11 +224,11 @@ bool graphe::connexite(std::vector <bool> b2)
     for(size_t i=1;i<connexiteDuSommet.size(); i++)
     {
         if(connexiteDuSommet.find(i-1)->second!=connexiteDuSommet.find(i)->second)
-            return 0;
+            return false;
     }
 
     /// Sinon il est connexe
-    return 1;
+    return true;
 }
 
 std::vector<float> graphe::poidsDuGraphe (std::vector <bool> b2)
