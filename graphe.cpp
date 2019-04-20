@@ -99,7 +99,7 @@ bool * graphe::decToBinary(int n)
 
 
 
-void graphe::brute()
+std::unordered_map< int,std::vector<float> > graphe::brute()
 {
 
     int cmpAretes=0;
@@ -107,19 +107,20 @@ void graphe::brute()
     int nbCasPossibles= pow(2,m_taille);    /// Enumaration des cas possibles
     std::vector<std::vector<bool> > solAdmissible;
     std::vector<std::vector<bool> > solVraimentAdmissible;
-    std::vector <bool> b2;
+    std::vector<bool> b2;
+    std::unordered_map< int,std::vector<float> > poidDimensionsGraphe;
 
     for (int j=0;j<nbCasPossibles;j++)  /// Réalisation des différents cas
     {
         bool *binNum = decToBinary(j);
         std::vector <bool> b1;
 
-        for (int k = 0;k<m_taille;k++)  ///On rogne le tableau
+        for (int k = 0;k<m_taille;k++)  ///On rogne le tableau pour qu'il corresponde à la dimension du graphe choisi
         {
             b1.push_back(binNum[k]);
         }
 
-        for (std::size_t i = 0; i < b1.size(); ++i) {
+        for (size_t i = 0; i < b1.size(); ++i) {
             if (b1[i]==1)
                 cmpAretes++;
         }
@@ -145,19 +146,30 @@ void graphe::brute()
         }
     }
 
-   ///On affiche toutes les solutions
-    for (int i = 0;i<solAdmissible.size();i++)
+    /// On récupère le poid de toutes les dimensions de chaque graphe
+    for (size_t i = 0; i<solVraimentAdmissible.size(); i++)
+    {
+        poidDimensionsGraphe.insert({i,poidsDuGraphe(solVraimentAdmissible[i])});
+    }
+
+   ///On affiche toutes les solutions, leurs dimensions et le poid de chaque dimension
+    for (int i = 0;i<solVraimentAdmissible.size();i++)
     {
         for (int j = m_taille-1; j >= 0; j--)
-            std::cout << solAdmissible[i][j];
-        std::cout<<'\n';
+        {
+            std::cout << solVraimentAdmissible[i][j];
+
+        }
+        std::cout << std::endl<<poidDimensionsGraphe.find(i)->first<< " x = "
+                  << poidDimensionsGraphe.find(i)->second[0]<< " y = "
+                  <<poidDimensionsGraphe.find(i)->second[1]<<std::endl<< std::endl;
+
     }
 
     /// Affichage du nombre de solutions Admissibles
     std::cout << solVraimentAdmissible.size() <<'\n';
-
+return poidDimensionsGraphe;
 }
-
 
 bool graphe::connexite(std::vector <bool> b2)
 {
@@ -225,6 +237,41 @@ bool graphe::connexite(std::vector <bool> b2)
 
     /// Sinon il est connexe
     return 1;
+}
+
+std::vector<float> graphe::poidsDuGraphe (std::vector <bool> b2)
+{
+    std::vector <float> stockPoids;
+    std::unordered_map<int,arete*> aretesStockes;   /// Toutes les aretes sont stockés dedans
+    int id=0;
+
+    for (int i= 0; i< b2.size();i++)
+    {
+        ///On insère les aretes qui existent dans un nouveau vecteur d'aretes
+        if (b2[i]==1)
+        {
+            aretesStockes.insert( {id, m_aretes.find(i)->second});
+            id++;   /// id augmente a chaque fois, ainsi on a des valeurs pour 0,1,2,... au lieu d'avoir 1,3,4,...
+        }
+    }
+
+    ///Initialisation pour chaque dimension à 0
+    for (size_t j=0;j<aretesStockes.find(j)->second->getMPonderation()[j];j++)
+    {
+        stockPoids.push_back(0);
+    }
+
+    ///On incrémente la valeur de chaque dimension dans stockPoids
+    for (size_t i=0;i<aretesStockes.size();i++)
+    {
+        for (size_t j=0;j<aretesStockes.find(i)->second->getMPonderation().size();j++)
+        {
+            stockPoids[j]=stockPoids[j]+ aretesStockes.find(i)->second->getMPonderation()[j];
+        }
+    }
+
+    /// On retourne le poid de chaque dimension
+    return stockPoids;
 }
 
 graphe::~graphe()

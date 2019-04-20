@@ -27,3 +27,7 @@ void arete::afficherAretes() const{
     std::cout<<"Sommet d'arrive :" <<m_somArrive <<std::endl;
 }
 
+const std::vector<float> &arete::getMPonderation() const {
+    return m_ponderation;
+}
+

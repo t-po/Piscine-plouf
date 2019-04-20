@@ -17,6 +17,7 @@ class arete {
         void ajouterPonderation(float);
         void afficherAretes()const;
 
+        const std::vector<float> &getMPonderation() const;
         int getSomDepart (){return m_somDepart;};
         int getSomArrive (){return m_somArrive;};
 
@@ -25,6 +26,8 @@ class arete {
         int m_somDepart;
         int m_somArrive;
         std::vector<float> m_ponderation;
+
+
 
 };
 

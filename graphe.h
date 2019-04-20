@@ -24,9 +24,10 @@ class graphe {
         void afficher() const;
 
         ///Brute
-        void brute();
+        std::unordered_map< int,std::vector<float> > brute();
         bool *decToBinary(int n);
         bool connexite(std::vector< bool> b2);
+        std::vector <float> poidsDuGraphe (std::vector <bool> b2);
 
     private:
         int m_ordre=0;
