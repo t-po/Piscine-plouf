@@ -22,12 +22,14 @@ class sommet {
         void afficherVoisins() const;
         int getDegre();
         void ajouterAretes( Arete*);
-        void trierAretes();     ///Trie les aretes relié au sommet dans l'ordre croissant de la première pondérations.
+        void trierAretes(int);     ///Trie les aretes relié au sommet dans l'ordre croissant de la première pondérations.
         std::vector< Arete *> getMAretePourSommet() ;
         int getMId() ;
         void afficherAretePourSommet();
-    double getX();
-    double getY();
+        double getX();
+        double getY();
+        float getPoidsSubjectif() const;
+        void setPoidsSubjectif(float poidsSubjectif);
 
     private:
         /// Voisinage : liste d'adjacence
@@ -38,6 +40,7 @@ class sommet {
         /// Données spécifiques du sommet
         int m_id; // Identifiant
         double m_x, m_y; // Position
+        float poidsSubjectif;    ///SPECIAL DIJKSTRA
 };
 
 
