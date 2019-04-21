@@ -31,7 +31,12 @@ class graphe {
         bool connexite(std::vector< bool> b2);
         std::vector <float> poidsDuGraphe (std::vector <bool> b2);
 
+
+        /// Prim
         graphe* prim();
+
+        ///Pareto
+        void pareto(std:: unordered_map<int,std::vector<float>> map_graphes);
 
         void trierAretesPourToutSommet();   ///Pour chaque sommet : trie le vecteur d'aretes relié au sommet
 
