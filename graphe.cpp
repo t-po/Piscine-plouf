@@ -320,7 +320,7 @@ std::unordered_map< int,std::vector<float> > graphe::brute()
     }
 
    ///On affiche toutes les solutions, leurs dimensions et le poid de chaque dimension
-    for (int i = 0;i<solVraimentAdmissible.size();i++)
+    /*for (int i = 0;i<solVraimentAdmissible.size();i++)
     {
         for (int j = m_taille-1; j >= 0; j--)
         {
@@ -332,9 +332,10 @@ std::unordered_map< int,std::vector<float> > graphe::brute()
                   <<poidDimensionsGraphe.find(i)->second[1]<<std::endl<< std::endl;
 
     }
+     */
 
     /// Affichage du nombre de solutions Admissibles
-    std::cout << solVraimentAdmissible.size() <<'\n';
+   // std::cout << solVraimentAdmissible.size() <<'\n';
 
 return poidDimensionsGraphe;
 }
