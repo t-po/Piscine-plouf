@@ -4,20 +4,25 @@
 
 #ifndef PISCINE_ARETE_H
 #define PISCINE_ARETE_H
-
-
-#include "sommet.h"
+#include <string>
+#include <vector>
+#include <unordered_map>
+#include <unordered_set>
+#include <queue>
 
 class vector;
 
-class arete {
+class Arete {
     public:
-        arete(int, int mSomArrive, int mSomDepart);
-        ~arete();
+        Arete(int, int mSomArrive, int mSomDepart);
+        Arete();
+        ~Arete();
         void ajouterPonderation(float);
         void afficherAretes()const;
 
-        const std::vector<float> &getMPonderation() const;
+        const std::vector<float> &getMPonderationVector() const;
+        const float getMPonderation(int) const;
+        int getMId();
         int getSomDepart (){return m_somDepart;};
         int getSomArrive (){return m_somArrive;};
 

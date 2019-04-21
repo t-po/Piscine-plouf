@@ -9,6 +9,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <queue>
+#include "Arete.h"
 
 
 class sommet {
@@ -20,10 +21,19 @@ class sommet {
         void afficherData() const;
         void afficherVoisins() const;
         int getDegre();
+        void ajouterAretes( Arete*);
+        void trierAretes();     ///Trie les aretes relié au sommet dans l'ordre croissant de la première pondérations.
+        std::vector< Arete *> getMAretePourSommet() ;
+        int getMId() ;
+        void afficherAretePourSommet();
+    double getX();
+    double getY();
 
     private:
         /// Voisinage : liste d'adjacence
         std::vector<const sommet*> m_voisins;
+        std::vector< Arete*> m_aretePourSommet;
+
 
         /// Données spécifiques du sommet
         int m_id; // Identifiant

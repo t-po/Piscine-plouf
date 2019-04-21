@@ -1,13 +1,18 @@
+#include <utility>
+
+#include <utility>
+
 //
 // Created by utilisateur on 15/04/2019.
 //
 
 #include <fstream>
 #include <iostream>
-#include "graphe.h"
 #include <unordered_map>
 #include <unordered_set>
 #include <set>
+#include "graphe.h"
+#include "Svgfile.h"
 
 graphe::graphe(std::string nomFichierGraphe, std::string nomFichierArete) {
     std::ifstream ifs{nomFichierGraphe};
@@ -33,11 +38,13 @@ graphe::graphe(std::string nomFichierGraphe, std::string nomFichierArete) {
     //lecture des aretes
     for (int i=0; i<m_taille; ++i){
         //lecture des ids des deux extrémitées
-        ifs>>id; if(ifs.fail()) throw std::runtime_error("Probleme lecture id arete");
-        ifs>>id_somDepart; if(ifs.fail()) throw std::runtime_error("Probleme lecture arete sommet Depart");
-        ifs>>id_somArrive; if(ifs.fail()) throw std::runtime_error("Probleme lecture arete sommet Arrivee");
-
-        m_aretes.insert({id,new arete{id,id_somDepart,id_somArrive}});
+        ifs>>id; if(ifs.fail()) throw std::runtime_error("Probleme lecture id Arete");
+        ifs>>id_somDepart; if(ifs.fail()) throw std::runtime_error("Probleme lecture Arete sommet Depart");
+        ifs>>id_somArrive; if(ifs.fail()) throw std::runtime_error("Probleme lecture Arete sommet Arrivee");
+        auto* actualArete= new Arete{id,id_somDepart,id_somArrive};
+        m_sommets.find(id_somDepart)->second->ajouterAretes(actualArete); ///Ajoute l'Arete au vecteur des aretes relié au sommet
+        m_sommets.find(id_somArrive)->second->ajouterAretes(actualArete); ///Ajoute l'Arete au vecteur des aretes relié au sommet
+        m_aretes.insert({id,actualArete});
     }
     ifs.close();
     std::ifstream ifs2{nomFichierArete};
@@ -50,12 +57,16 @@ graphe::graphe(std::string nomFichierGraphe, std::string nomFichierArete) {
     float ponde;
     ifs2>>nb_ponde;
     for (int i=0; i<m_taille; ++i){
-        ifs2>>id; if(ifs2.fail()) throw std::runtime_error("Probleme lecture id arete");
+        ifs2>>id; if(ifs2.fail()) throw std::runtime_error("Probleme lecture id Arete");
         for (int j=0;j<nb_ponde;j++){
-            ifs2>>ponde; if(ifs2.fail()) throw std::runtime_error("Probleme lecture poids de l'arete");
+            ifs2>>ponde; if(ifs2.fail()) throw std::runtime_error("Probleme lecture poids de l'Arete");
             (m_aretes.find(id))->second->ajouterPonderation(ponde);
         }
     }
+    trierAretesPourToutSommet();  ///Pour chaque sommet : trie le vecteur d'aretes relié au sommet
+}
+
+graphe::graphe(int mtaille, int mordre, std::unordered_map<int, sommet *> msommets, std::unordered_map<int, Arete *> maretes) : m_taille(mtaille), m_ordre(mordre), m_sommets(msommets), m_aretes(maretes) {
 
 }
 
@@ -75,6 +86,171 @@ void graphe::afficher() const{                              ///Affiche le graphe
         ar.second->afficherAretes();
     }
 }
+
+graphe* graphe::prim() {
+    ///Décalarations des variables
+    std::unordered_map<int, sommet*> nouveauxSommets;               ///unordored map de sommet du graphe donner par Prim
+    std::unordered_map<int, Arete*> nouvellesAretes;           ///unordored map d'aretes du graphe donner par Prim
+    std::vector<std::vector< Arete*>> listAretesSommet;        ///Vecteur de vecteur d'aretes. Pour trouver la branche de poids minimum.
+    bool isPresentDep;                  ///Variable pour savoir si le sommet de départ est déjà découvert
+    bool isPresentArr;                  ///Variable pour savoir si le sommet de d'arrivé est déjà découvert
+    float poidMin=(m_sommets.find(0)->second->getMAretePourSommet())[0]->getMPonderation(0); ///prendra le plus petit poids de listAretesSommet
+    int id=0;                           ///id de l'arete de plus petit poids.
+
+    nouveauxSommets.insert({m_sommets.find(0)->second->getMId(),m_sommets.find(0)->second}); ///Sommet0 insérer dans la nouvelle unordored map
+    listAretesSommet.push_back(m_sommets.find(0)->second->getMAretePourSommet());
+    while (nouveauxSommets.size()<m_sommets.size()){                                  ///Pour chaque sommet
+        if (listAretesSommet.size()>1) {
+            for (unsigned int i = 0; i < listAretesSommet.size(); ++i) {                       ///Recherche du poid minimal
+                if (listAretesSommet[i][0]->getMPonderation(0) < poidMin) {
+                    poidMin = listAretesSommet[i][0]->getMPonderation(0);
+                    id = i;
+                }
+            }
+        }
+        isPresentDep = estPresent((listAretesSommet[id][0])->getSomDepart(),
+                                  nouveauxSommets); ///le sommet de départ est-il déjà découvert
+        isPresentArr = estPresent(listAretesSommet[id][0]->getSomArrive(),
+                                  nouveauxSommets);   ///le sommet de d'arrivé est-il déjà découvert
+        if (!isPresentDep || !isPresentArr) {                                                ///Si un des deux n'est pas découvert
+            nouvellesAretes.insert(
+                    {listAretesSommet[id][0]->getMId(), listAretesSommet[id][0]});    ///On enregistre l'arete
+            if (!isPresentArr) {                                                              ///Si c'est le sommet d'arrivé qui n'est pas parcourue
+                nouveauxSommets.insert({listAretesSommet[id][0]->getSomArrive(),
+                                        m_sommets.find(listAretesSommet[id][0]->getSomArrive())->second});  ///on l'insère dans le tableau pour qu'il le soit
+                listAretesSommet.push_back(m_sommets.find(listAretesSommet[id][0]->getSomArrive())->second->getMAretePourSommet());///met son vecteur d'arete dans listAretesSommet
+            }
+            else {                                                                            ///Si c'est le sommet de départ qui n'est pas parcourue
+                nouveauxSommets.insert({listAretesSommet[id][0]->getSomDepart(),
+                                        m_sommets.find(listAretesSommet[id][0]->getSomDepart())->second});   ///on l'insère dans le tableau pour qu'il le soit
+                listAretesSommet.push_back(m_sommets.find(listAretesSommet[id][0]->getSomDepart())->second->getMAretePourSommet());///met son vecteur d'arete dans listAretesSommet
+            }
+
+        }
+        listAretesSommet[id].erase(listAretesSommet[id].begin());
+        if (listAretesSommet[id].empty()){
+            listAretesSommet.erase(listAretesSommet.begin()+id);}
+        poidMin=listAretesSommet[id][0]->getMPonderation(0); ///prend le premier poids de la premiere arete du vecteur de vecteur
+    }
+    graphe* g=new graphe(nouvellesAretes.size(), nouveauxSommets.size(), nouveauxSommets,nouvellesAretes);
+    return (g);
+}
+
+void graphe::trierAretesPourToutSommet() {
+    for (auto so:m_sommets){            ///Pour chaque sommet : trie le vecteur d'aretes relié au sommet
+        so.second->trierAretes();
+    }
+}
+
+bool graphe::estPresent( int id, std::unordered_map<int, sommet *> table) {
+    for(auto it:table){
+        if(it.second->getMId() == id){
+            return true;
+        }
+    }
+    return false;
+}
+
+void graphe::afficherAretePourToutSommet() {
+    for(auto so:m_sommets){
+        so.second->afficherAretePourSommet();
+        std::cout<<"ici"<<std::endl;
+    }
+}
+
+
+void graphe::afficher_graphe(Svgfile& fic)
+{
+    double x1,x2,y1,y2,X,Y,X2,Y2;
+    for ( auto  it = m_aretes.begin(); it != m_aretes.end(); ++it )
+    {
+        std::unordered_map<int,sommet*>::const_iterator got = m_sommets.find (it->second->getSomDepart());
+        if ( got != m_sommets.end())
+        {
+            x1 = got->second->getX();
+            y1 = got->second->getY();
+        }
+
+        got = m_sommets.find (it->second->getSomArrive());
+        if ( got != m_sommets.end())
+        {
+            x2 = got->second->getX();
+            y2 = got->second->getY();
+        }
+        fic.addLine(x1,y1,x2,y2,"black");
+        X = (x1+x2)/2;
+        Y = (y1+y2)/2 - 2;
+        Y2 = Y;
+        X2 = X;
+        //for(auto p:it->second->getPond()) {
+        if(y1 != y2 && x1 != x2)
+        {
+            if (x1<x2)
+            {
+                X2 = X;
+                Y2= Y+15;
+                X = X-15;
+            }
+            if(x1>x2)
+            {
+                X2 = X-10;
+                Y2= Y+15;
+                X = X+15;
+            }
+
+        }
+        if(x1 == x2)
+        {
+            X2 = X+2;
+            X = X-17;
+
+        }
+        if (y1 == y2)
+        {
+            X2 = X;
+            Y2= Y+15;
+        }
+
+            fic.addText(X-7,Y,it->second->getMPonderation(0),"red");
+            fic.addText(X,Y,":","black");
+            fic.addText(X+7,Y,it->second->getMPonderation(1),"red");
+            fic.addText(X2,Y2,it->second->getMId());
+        //}
+
+
+    }
+    for ( auto  it = m_sommets.begin(); it != m_sommets.end(); ++it )
+    {
+        fic.addDisk(it->second->getX(),it->second->getY(),10,"black");
+        fic.addText(it->second->getX()-5,it->second->getY()+5,it->first,"white");
+
+    }
+
+
+
+
+}
+
+/*std::vector <float> graphe::poid_total()
+{
+    float poid1 = 0;
+    float poid2 = 0;
+    std :: vector < float> poidTotal;
+
+
+    for ( auto  it = m_aretes.begin(); it != m_aretes.end(); ++it )
+    {
+        std::vector<float> pond = it->second->getPond();
+        poid1 = poid1 + pond[0];
+        poid2 = poid2 + pond[1];
+
+    }
+    poidTotal[0] = poid1;
+    poidTotal[1] = poid2;
+
+    return poidTotal;
+
+}*/
 
 bool * graphe::decToBinary(int n)
 {
@@ -167,7 +343,7 @@ bool graphe::connexite(std::vector <bool> b2)
 {
 
     std::unordered_map<int,int> connexiteDuSommet; /// La connexité de chaque sommet
-    std::unordered_map<int,arete*> aretesStockes;   /// Toutes les aretes sont stockés dedans
+    std::unordered_map<int,Arete*> aretesStockes;   /// Toutes les aretes sont stockés dedans
     int id=0;
     int temp;
 
@@ -234,7 +410,7 @@ bool graphe::connexite(std::vector <bool> b2)
 std::vector<float> graphe::poidsDuGraphe (std::vector <bool> b2)
 {
     std::vector <float> stockPoids;
-    std::unordered_map<int,arete*> aretesStockes;   /// Toutes les aretes sont stockés dedans
+    std::unordered_map<int,Arete*> aretesStockes;   /// Toutes les aretes sont stockés dedans
     int id=0;
 
     for (int i= 0; i< b2.size();i++)
@@ -248,7 +424,7 @@ std::vector<float> graphe::poidsDuGraphe (std::vector <bool> b2)
     }
 
     ///Initialisation pour chaque dimension à 0
-    for (size_t j=0;j<aretesStockes.find(j)->second->getMPonderation()[j];j++)
+    for (size_t j=0;j<aretesStockes.find(j)->second->getMPonderationVector()[j];j++)
     {
         stockPoids.push_back(0);
     }
@@ -256,9 +432,9 @@ std::vector<float> graphe::poidsDuGraphe (std::vector <bool> b2)
     ///On incrémente la valeur de chaque dimension dans stockPoids
     for (size_t i=0;i<aretesStockes.size();i++)
     {
-        for (size_t j=0;j<aretesStockes.find(i)->second->getMPonderation().size();j++)
+        for (size_t j=0;j<aretesStockes.find(i)->second->getMPonderationVector().size();j++)
         {
-            stockPoids[j]=stockPoids[j]+ aretesStockes.find(i)->second->getMPonderation()[j];
+            stockPoids[j]=stockPoids[j]+ aretesStockes.find(i)->second->getMPonderationVector()[j];
         }
     }
 
