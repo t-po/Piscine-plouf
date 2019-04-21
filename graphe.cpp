@@ -232,6 +232,5 @@ void graphe::afficher_graphe(Svgfile& fic)
 }
 
 
-
 graphe::~graphe()
 =default;

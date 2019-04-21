@@ -46,55 +46,47 @@ void pareto(std:: unordered_map<int,std::vector<float>> map_graphes)
 
     std::unordered_map<int, std::vector<float >> map_parreto;
     //std::vector<std::vector<float>>tri;
+    /// on crée deux variables pour enregister les points de la frontieres de pareto avec les poid et l'id
     float Xmemoire = map_graphes.begin()->second[0];
     float Ymemoire = map_graphes.begin()->second[1];
-    int compteur = 0;
     int id_graphe;
+
+    int compteur = 0;
     float Ymax;
-    bool effacer = false;
-    std::cout<<"0"<<std::endl;
+    bool vide = true;
+    ///notre but va être de trouver touts les solutions de pareto en parcourant le poid 1
     do {
 
-        Xmemoire = map_graphes.begin()->second[0];
+        Xmemoire = map_graphes.begin()->second[0];/// on recommence au debut de la map
         Ymemoire = map_graphes.begin()->second[1];
-        for ( auto  it = map_graphes.begin(); it != map_graphes.end(); ++it )
+        for ( auto  it = map_graphes.begin(); it != map_graphes.end(); ++it ) /// pour toutes les valeurs données par le brut force
         {
-            
-            std::cout<< it->second[0] << "comparer a " << Xmemoire <<std::endl;
-            if (it->second[0] < Xmemoire)
+
+            if (it->second[0] < Xmemoire) /// si le poid 1 est inférieur à celui en memoire
             {
-            std::cout<<it->second[0]<< "est rentrer dans la boucle" <<std::endl;
+                /// c'est le sommet avec le plus petit poid à ce rang
                 Xmemoire = it->second[0];
                 Ymemoire = it->second[1];
                 id_graphe = it->first;
 
             }
-            else if (it->second[1] > Ymemoire)
-            {
-
-                effacer = true;
-                //map_graphes.erase(it);
-                //it--;
-
-            }
-
-            if (it->second[0] == Xmemoire && it->second[1]<= Ymemoire)
-            {
-                Xmemoire = it->second[0];
-                Ymemoire = it->second[1];
-                id_graphe = it->first;
-            }
-
-            if(effacer == true)
+            else if (it->second[1] > Ymemoire) /// si les poids 1 et 2 sont supérieur alor ce ne sera dans tous les cas pas une solution de pareto on peut donc allger la liste
             {
                 auto it2 = it--;
-                std :: cout<<it2->second[0]<< " a ete effacer"<<std::endl;
                 map_graphes.erase(it2);
-                effacer = false;
+
             }
+
+            if (it->second[0] == Xmemoire && it->second[1]<= Ymemoire)/// dans le cas de deux poid 1 egaux alor on prend celui avec le poid 2 le plus petit
+            {
+                Xmemoire = it->second[0];
+                Ymemoire = it->second[1];
+                id_graphe = it->first;
+            }
+            
         }
 
-        if (compteur == 0)
+        if (vide == true )
         {
             Ymax = Ymemoire;
             compteur++;
