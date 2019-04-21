@@ -16,7 +16,7 @@ int main() {
     g2->afficher_graphe(svgout);
     map_graphes= g.brute();
     g.pareto(map_graphes);
-    std::cout <<"ok";
+
 
     return 0;
 }
