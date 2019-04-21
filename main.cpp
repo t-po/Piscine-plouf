@@ -15,7 +15,7 @@ int main() {
     g2->afficher();
     g2->afficher_graphe(svgout);
     map_graphes= g.brute();
-    g.pareto(map_graphes);
+    //g.pareto(map_graphes);
 
 
     return 0;

@@ -11,6 +11,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <set>
+#include <cmath>
 #include "graphe.h"
 #include "Svgfile.h"
 
