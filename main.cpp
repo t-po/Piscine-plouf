@@ -14,8 +14,8 @@ int main() {
     graphe* g2=g.prim();
     g2->afficher();
     g2->afficher_graphe(svgout);
-    //map_graphes= g.brute();
-    //g.pareto(map_graphes);
+    map_graphes= g.brute();
+    g.pareto(map_graphes);
 
 
     return 0;
