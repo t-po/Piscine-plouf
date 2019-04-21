@@ -16,6 +16,7 @@ int main() {
     g2->afficher();
     g2->afficher_graphe(svgout);
     map_graphes= g.brute();
+
     //g.pareto(map_graphes);
     graphe g3{"../files/broadway.txt","../files/broadway_weights_0.txt"};
     auto dijkstra = new DijkstraAlgorithm(&g3);
