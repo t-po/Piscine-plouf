@@ -10,12 +10,12 @@ int main() {
     svgout.addGrid(100,true,"lightgrey");
     std::string id;
     graphe g{"../files/triville.txt","../files/triville_weights_0.txt"};
-    /*g.afficher();///Affiche le graphe
+    g.afficher();///Affiche le graphe
     g.afficher_graphe(svgout);
     std::cout<<std::endl<<std::endl<<"PRIM"<<std::endl;
     graphe* g2=g.prim();
     g2->afficher();
-    g2->afficher_graphe(svgout);*/
+    g2->afficher_graphe(svgout);
     std:: unordered_map<int,std::vector<float>> vect;
     std::cout<<"*************************"<<std::endl;
     std::vector<float>vv={18.0,14.0};
@@ -46,13 +46,15 @@ void pareto(std:: unordered_map<int,std::vector<float>> map_graphes)
 
     std::unordered_map<int, std::vector<float >> map_parreto;
     //std::vector<std::vector<float>>tri;
-    /// on crée deux variables pour enregister les points de la frontieres de pareto avec les poid et l'id
+    /// on crée trois variables pour enregister les points de la frontieres de pareto avec les poid et l'id
     float Xmemoire = map_graphes.begin()->second[0];
     float Ymemoire = map_graphes.begin()->second[1];
     int id_graphe;
 
+    int id_graphe_effacer;
+    bool effacer = false;
     int compteur = 0;
-    float Ymax;
+    float Ymax;/// cette variable nous servira pour apres avoir trier le poid 1
     bool vide = true;
     ///notre but va être de trouver touts les solutions de pareto en parcourant le poid 1
     do {
@@ -62,6 +64,12 @@ void pareto(std:: unordered_map<int,std::vector<float>> map_graphes)
         for ( auto  it = map_graphes.begin(); it != map_graphes.end(); ++it ) /// pour toutes les valeurs données par le brut force
         {
 
+
+            if(effacer == true) ///on efface ce qui avait au tour d'avant pour eviter de fzire planter le code
+            {
+                map_graphes.erase(id_graphe_effacer);
+                effacer = false;
+            }
             if (it->second[0] < Xmemoire) /// si le poid 1 est inférieur à celui en memoire
             {
                 /// c'est le sommet avec le plus petit poid à ce rang
@@ -72,8 +80,8 @@ void pareto(std:: unordered_map<int,std::vector<float>> map_graphes)
             }
             else if (it->second[1] > Ymemoire) /// si les poids 1 et 2 sont supérieur alor ce ne sera dans tous les cas pas une solution de pareto on peut donc allger la liste
             {
-                auto it2 = it--;
-                map_graphes.erase(it2);
+                id_graphe_effacer = it->first;
+                effacer = true;
 
             }
 
@@ -83,25 +91,23 @@ void pareto(std:: unordered_map<int,std::vector<float>> map_graphes)
                 Ymemoire = it->second[1];
                 id_graphe = it->first;
             }
-            
+
         }
 
-        if (vide == true )
+        if (vide == true )/// si notre liste de fin comptant toutes les solutions de parreto esy vide
         {
-            Ymax = Ymemoire;
-            compteur++;
+            Ymax = Ymemoire;//
+            vide = false;
         }
-        if (Ymemoire <= Ymax)
+        if (Ymemoire <= Ymax)/// si l'on range dans l'odre croissaznt les solutions on peut voir que si le poid 1 augmente le poid 2 diminue donc si le poid 2 est inferieur au poid  2 précédent alor c'est une solution
         {
 
-            compteur++;
             std::vector<float> tampon;
             tampon.push_back(Xmemoire);
             tampon.push_back(Ymemoire);
-            Ymax = Ymemoire;
-            std::cout<<"***poid final  : 1 : "<<Xmemoire<<"    poid  final 2 :  "<< Ymemoire<<std::endl;
+            Ymax = Ymemoire; /// on sauvegarde le dernier poid 2
             map_parreto.insert({id_graphe, tampon});
-            map_graphes.erase(id_graphe);
+            map_graphes.erase(id_graphe); /// on peut donc supprimmer ce point
 
         }
 
