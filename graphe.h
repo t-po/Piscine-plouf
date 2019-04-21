@@ -24,17 +24,15 @@ class graphe {
 
         ///Affiche le graphe
         void afficher() const;
-
         graphe* prim();
-
         void trierAretesPourToutSommet();   ///Pour chaque sommet : trie le vecteur d'aretes relié au sommet
-
-        bool estPresent( int ,std::unordered_map<int,sommet*>);
-
+        bool estPresentMap(int, std::unordered_map<int, sommet *>);
+        bool estPresentVector(int,std::vector<Arete*>);
         void afficherAretePourToutSommet();
-
         void afficher_graphe(Svgfile& fic);
         //std::vector <float>poid_total();
+        float dijkstra(int i);
+        float calculPr2();
     private:
         int m_ordre;
         int m_taille;

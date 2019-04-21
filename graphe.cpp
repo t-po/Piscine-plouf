@@ -98,7 +98,7 @@ graphe* graphe::prim() {
     int id=0;                           ///id de l'arete de plus petit poids.
 
     nouveauxSommets.insert({m_sommets.find(0)->second->getMId(),m_sommets.find(0)->second}); ///Sommet0 insérer dans la nouvelle unordored map
-    listAretesSommet.push_back(m_sommets.find(0)->second->getMAretePourSommet());
+    listAretesSommet.push_back(m_sommets.find(0)->second->getMAretePourSommet());            ///J'incrémente listAreteSommet
     while (nouveauxSommets.size()<m_sommets.size()){                                  ///Pour chaque sommet
         if (listAretesSommet.size()>1) {
             for (unsigned int i = 0; i < listAretesSommet.size(); ++i) {                       ///Recherche du poid minimal
@@ -108,10 +108,10 @@ graphe* graphe::prim() {
                 }
             }
         }
-        isPresentDep = estPresent((listAretesSommet[id][0])->getSomDepart(),
-                                  nouveauxSommets); ///le sommet de départ est-il déjà découvert
-        isPresentArr = estPresent(listAretesSommet[id][0]->getSomArrive(),
-                                  nouveauxSommets);   ///le sommet de d'arrivé est-il déjà découvert
+        isPresentDep = estPresentMap((listAretesSommet[id][0])->getSomDepart(),
+                                     nouveauxSommets); ///le sommet de départ est-il déjà découvert
+        isPresentArr = estPresentMap(listAretesSommet[id][0]->getSomArrive(),
+                                     nouveauxSommets);   ///le sommet de d'arrivé est-il déjà découvert
         if (!isPresentDep || !isPresentArr) {                                                ///Si un des deux n'est pas découvert
             nouvellesAretes.insert(
                     {listAretesSommet[id][0]->getMId(), listAretesSommet[id][0]});    ///On enregistre l'arete
@@ -127,8 +127,8 @@ graphe* graphe::prim() {
             }
 
         }
-        listAretesSommet[id].erase(listAretesSommet[id].begin());
-        if (listAretesSommet[id].empty()){
+        listAretesSommet[id].erase(listAretesSommet[id].begin());   ///Suppression de l'arete selectionné
+        if (listAretesSommet[id].empty()){          ///Si toutes les aretes d'un sommet ont été utilisé, on supprime le vecteur d'arete.
             listAretesSommet.erase(listAretesSommet.begin()+id);}
         poidMin=listAretesSommet[id][0]->getMPonderation(0); ///prend le premier poids de la premiere arete du vecteur de vecteur
     }
@@ -142,9 +142,18 @@ void graphe::trierAretesPourToutSommet() {
     }
 }
 
-bool graphe::estPresent( int id, std::unordered_map<int, sommet *> table) {
+bool graphe::estPresentMap( int id, std::unordered_map<int, sommet *> table) {
     for(auto it:table){
         if(it.second->getMId() == id){
+            return true;
+        }
+    }
+    return false;
+}
+
+bool graphe::estPresentVector(int id, std::vector<Arete *>vect) {
+    for(auto it:vect){
+        if(it->getMId()==id){
             return true;
         }
     }
@@ -230,6 +239,84 @@ void graphe::afficher_graphe(Svgfile& fic)
 
 
 }
+
+float graphe::dijkstra(int i) {
+    std::vector<int>sommetsPris;
+    int max=m_ordre;
+
+    while(sommetsPris.size()<m_ordre) {
+        Arete* areteActuelle=m_sommets.find(i)->second->getMAretePourSommet()[0];
+        std::vector<Arete*> listAretesPrecedantes;        ///Vecteur de vecteur d'aretes. Pour trouver la branche de poids minimum.
+        std::vector<sommet*>sommetsPrecedants;
+        sommet* sommetActuel=m_sommets.find(i)->second;
+
+        sommetActuel->setPoidsSubjectif(0);
+        float poidsMin=areteActuelle->getMPonderation(1);
+        int id=0;
+
+        while (sommetActuel!=m_sommets.find(max-1)->second){                       //for (int k = 0; k < max; ++k) {
+
+            int j = 0;
+
+            ///Trouve le sommet suivant
+            if( m_sommets.find(areteActuelle->getSomDepart())->second!=sommetActuel){
+                areteActuelle = m_sommets.find(areteActuelle->getSomDepart())->second->getMAretePourSommet()[j];
+                sommetsPrecedants.push_back(sommetActuel);
+                sommetActuel=m_sommets.find(areteActuelle->getSomDepart())->second;
+                sommetActuel->setPoidsSubjectif(poidsMin);
+            }
+            else{
+                areteActuelle = m_sommets.find(areteActuelle->getSomArrive())->second->getMAretePourSommet()[j];
+                sommetsPrecedants.push_back(sommetActuel);
+                sommetActuel=m_sommets.find(areteActuelle->getSomDepart())->second;
+                sommetActuel->setPoidsSubjectif(poidsMin);
+            }
+            ///
+
+            ///Trouve la meilleure voie
+            float testPoidsMin=sommetActuel->getMAretePourSommet()[0]->getMPonderation(1) + sommetActuel->getPoidsSubjectif();    ///Déclaration et set de testPoidsMin
+            for (unsigned int l = 0; l < sommetsPrecedants.size(); ++l) {                       ///Recherche du poid minimal
+                ///Selection d'une arete qu'on a pas encore utilisé
+                while (estPresentVector(sommetsPrecedants[l]->getMAretePourSommet()[j]->getMId(),listAretesPrecedantes)) {
+                        j++;
+                }
+                ///
+                ///Choix de la meilleure arete
+                if (sommetsPrecedants[l]->getMAretePourSommet()[j]->getMPonderation(1) + sommetsPrecedants[l]->getPoidsSubjectif() < testPoidsMin) {
+                    testPoidsMin = sommetsPrecedants[l]->getMAretePourSommet()[j]->getMPonderation(1);
+                    id = l;
+                }///
+            }
+            ///
+
+
+
+
+            if (areteActuelle == aretePrecedente) {
+                j++;
+                areteActuelle = m_sommets.find(areteActuelle->getSomDepart())->second->getMAretePourSommet()[j];
+                poidsMin+=areteActuelle->getMPonderation(1);
+            } else {
+                poidsMin += areteActuelle->getMPonderation(1) + sommetActuel->getPoidsSubjectif();
+            }
+        }
+        sommetsPris.push_back(areteActuelle->getMId());
+        max--;
+    }
+    return 0;
+}
+
+float graphe::calculPr2() {
+    float Pr2=0;
+    for (int i = 0; i < m_sommets.size(); ++i) {
+        Pr2+=dijkstra(i);
+    }
+    ///somme des Dijkstras.
+    return 0;
+}
+
+
+
 
 /*std::vector <float> graphe::poid_total()
 {

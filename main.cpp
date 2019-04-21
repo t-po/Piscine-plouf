@@ -8,7 +8,7 @@ int main() {
     std::string id;
     graphe g{"../files/triville.txt","../files/triville_weights_0.txt"};
     g.afficher();///Affiche le graphe
-    g.afficher_graphe(svgout);
+    //g.afficher_graphe(svgout);
     std::cout<<std::endl<<std::endl<<"PRIM"<<std::endl;
     graphe* g2=g.prim();
     g2->afficher();

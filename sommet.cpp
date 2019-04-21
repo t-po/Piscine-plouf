@@ -89,3 +89,13 @@ void sommet::afficherAretePourSommet() {
         std::cout<<ar->getMPonderation(0)<<std::endl;
     }
 }
+
+void sommet::setPoidsSubjectif(float poidsSubjectif) {
+    sommet::poidsSubjectif = poidsSubjectif;
+}
+
+float sommet::getPoidsSubjectif() const {
+    return poidsSubjectif;
+}
+
+
