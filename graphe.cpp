@@ -11,6 +11,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <set>
+#include <cmath>
 #include "graphe.h"
 #include "Svgfile.h"
 
@@ -63,9 +64,7 @@ graphe::graphe(std::string nomFichierGraphe, std::string nomFichierArete) {
             (m_aretes.find(id))->second->ajouterPonderation(ponde);
         }
     }
-    std::cout<<"ici"<<std::endl;
     trierAretesPourToutSommet(0);  ///Pour chaque sommet : trie le vecteur d'aretes relié au sommet
-    std::cout<<"la"<<std::endl;
 }
 
 graphe::graphe(int mtaille, int mordre, std::unordered_map<int, sommet *> msommets, std::unordered_map<int, Arete *> maretes) : m_taille(mtaille), m_ordre(mordre), m_sommets(msommets), m_aretes(maretes) {
