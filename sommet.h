@@ -22,7 +22,7 @@ class sommet {
         void afficherVoisins() const;
         int getDegre();
         void ajouterAretes( Arete*);
-        void trierAretes();     ///Trie les aretes relié au sommet dans l'ordre croissant de la première pondérations.
+        void trierAretes(int);     ///Trie les aretes relié au sommet dans l'ordre croissant de la première pondérations.
         std::vector< Arete *> getMAretePourSommet() ;
         int getMId() ;
         void afficherAretePourSommet();

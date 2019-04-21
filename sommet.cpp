@@ -57,15 +57,15 @@ void sommet::ajouterAretes( Arete * Arete) {
     m_aretePourSommet.push_back(Arete);
 }
 
-void sommet::trierAretes() {        ///Trie les aretes relié au sommet dans l'ordre croissant de la première pondérations.
+void sommet::trierAretes(int id) {        ///Trie les aretes relié au sommet dans l'ordre croissant de la première pondérations.
     bool a=false;
     Arete* tmp;
     while(!a) {
         a=true;
-        float poidsMax= m_aretePourSommet[0]->getMPonderation(0);
+        float poidsMax= m_aretePourSommet[0]->getMPonderation(id);
         for(int i=1;i<m_aretePourSommet.size();++i) {
-            if (m_aretePourSommet[i]->getMPonderation(0) >= poidsMax) {
-                poidsMax = m_aretePourSommet[i]->getMPonderation(0);
+            if (m_aretePourSommet[i]->getMPonderation(id) >= poidsMax) {
+                poidsMax = m_aretePourSommet[i]->getMPonderation(id);
             } else {
                 tmp = m_aretePourSommet[i];
                 m_aretePourSommet[i] = m_aretePourSommet[i-1];
