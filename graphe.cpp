@@ -161,7 +161,7 @@ void graphe::afficherAretePourToutSommet() {
 
 void graphe::afficher_graphe(Svgfile& fic)
 {
-   double x1,x2,y1,y2,X,Y,X2,Y2;
+    double x1,x2,y1,y2,X,Y,X2,Y2;
     for ( auto  it = m_aretes.begin(); it != m_aretes.end(); ++it )
     {
         std::unordered_map<int,sommet*>::const_iterator got = m_sommets.find (it->second->getSomDepart());

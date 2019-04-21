@@ -9,16 +9,33 @@ int main() {
     Svgfile svgout;
     svgout.addGrid(100,true,"lightgrey");
     std::string id;
-    graphe g{"../files/cubetown.txt","../files/cubetown_weights_0.txt"};
-    g.afficher();///Affiche le graphe
+    graphe g{"../files/triville.txt","../files/triville_weights_0.txt"};
+    /*g.afficher();///Affiche le graphe
     g.afficher_graphe(svgout);
     std::cout<<std::endl<<std::endl<<"PRIM"<<std::endl;
     graphe* g2=g.prim();
     g2->afficher();
-    g2->afficher_graphe(svgout);
-    g.brute();
+    g2->afficher_graphe(svgout);*/
+    std:: unordered_map<int,std::vector<float>> vect;
+    std::cout<<"*************************"<<std::endl;
+    std::vector<float>vv={18.0,14.0};
+    vect.emplace(1,vv);
+    vv={19.0,15.0};
+    vect.emplace(2,vv);
+    vv={13.0,15.0};
+    vect.emplace(3,vv);
+    vv={16.0,19.0};
+    vect.emplace(4,vv);
+    vv={17.0,20.0};
+    vect.emplace(5,vv);
+    vv={11.0,20.0};
+    vect.emplace(6,vv);
+    vv={22.0,18.0};
+    vect.emplace(7,vv);
+    vv={16.0,18.0};
+    vect.emplace(8,vv);
 
-
+    pareto(vect);
 
     return 0;
 }
@@ -42,7 +59,7 @@ void pareto(std:: unordered_map<int,std::vector<float>> map_graphes)
         Ymemoire = map_graphes.begin()->second[1];
         for ( auto  it = map_graphes.begin(); it != map_graphes.end(); ++it )
         {
-
+            
             std::cout<< it->second[0] << "comparer a " << Xmemoire <<std::endl;
             if (it->second[0] < Xmemoire)
             {
