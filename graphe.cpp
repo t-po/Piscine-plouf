@@ -128,8 +128,8 @@ graphe* graphe::prim() {
             }
 
         }
-        listAretesSommet[id].erase(listAretesSommet[id].begin());   ///Suppression de l'arete selectionné
-        if (listAretesSommet[id].empty()){          ///Si toutes les aretes d'un sommet ont été utilisé, on supprime le vecteur d'arete.
+        listAretesSommet[id].erase(listAretesSommet[id].begin());
+        if (listAretesSommet[id].empty()){
             listAretesSommet.erase(listAretesSommet.begin()+id);}
         poidMin=listAretesSommet[id][0]->getMPonderation(0); ///prend le premier poids de la premiere arete du vecteur de vecteur
     }
