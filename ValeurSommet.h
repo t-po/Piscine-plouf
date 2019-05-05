@@ -8,7 +8,7 @@
 
 #include <vector>
 #include "ValeurOptimale.h"
-#include "../sommet.h"
+#include "sommet.h"
 
 class ValeurSommet {
 

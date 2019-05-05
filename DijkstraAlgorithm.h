@@ -4,7 +4,7 @@
 
 #ifndef PISCINE_DIJKSTRAALGORITHM_H
 #define PISCINE_DIJKSTRAALGORITHM_H
-#include "..\graphe.h"
+#include "graphe.h"
 #include "DijkstraTable.h"
 
 class DijkstraAlgorithm {
@@ -18,7 +18,6 @@ class DijkstraAlgorithm {
 
     private:
         graphe* _graph;
-
 };
 
 

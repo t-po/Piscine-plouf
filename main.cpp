@@ -1,7 +1,7 @@
 #include <iostream>
 #include "graphe.h"
 #include "Svgfile.h"
-#include "DijkstraTableObjects/DijkstraAlgorithm.h"
+#include "DijkstraAlgorithm.h"
 
 int main() {
     std:: unordered_map<int,std::vector<float>> map_graphes;

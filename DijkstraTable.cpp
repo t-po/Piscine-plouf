@@ -3,7 +3,7 @@
 //
 
 #include "DijkstraTable.h"
-#include "..\graphe.h"
+#include "graphe.h"
 
 DijkstraTable::DijkstraTable(graphe* graph) {
 
